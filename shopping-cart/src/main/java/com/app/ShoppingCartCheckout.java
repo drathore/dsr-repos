@@ -3,24 +3,31 @@ package com.app;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class ShoppingCartCheckout {
+public class ShoppingCartCheckout implements Checkout {
 
     private static final BigDecimal APPLE_PRICE = new BigDecimal("0.60");
     private static final BigDecimal ORANGE_PRICE = new BigDecimal("0.25");
     private static final String CURRENCY_SYMBOL = "£";
 
-    public String checkout(List<String> listOfItems) {
-        BigDecimal sum = BigDecimal.ZERO;
+    enum Item{
+        APPLE("Apple", APPLE_PRICE),
+        ORANGE("Orange", ORANGE_PRICE);
 
-        for (String item : listOfItems) {
-            if (item.equals("Apple")){
-                sum =  sum.add(APPLE_PRICE);
-            } else {
-                sum = sum.add(ORANGE_PRICE);
-            }
+        private final String name;
+        private final BigDecimal price;
+
+        Item(String name, BigDecimal price){
+            this.name = name;
+            this.price = price;
         }
+    }
 
-
-        return CURRENCY_SYMBOL +sum.toString();
+    public String checkout(List<String> listOfItems) {
+        return CURRENCY_SYMBOL + listOfItems.stream().map(i -> {
+            if(i.equals(Item.APPLE.name)){
+                return Item.APPLE.price;
+            }
+            return Item.ORANGE.price;
+        }).reduce(BigDecimal::add).get().toString();
     }
 }
