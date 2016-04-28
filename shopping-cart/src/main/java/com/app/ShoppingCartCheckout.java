@@ -36,7 +36,15 @@ public class ShoppingCartCheckout implements Checkout {
         List<String> oranges = groupedByName.get(Item.ORANGE.name);
         BigDecimal totalOrangePrice = BigDecimal.ZERO;
         if(oranges != null){
-            totalOrangePrice = ORANGE_PRICE.multiply(new BigDecimal(oranges.size()));
+
+            int numberOfOranges = oranges.size();
+            if(numberOfOranges == 3 ){
+                totalOrangePrice = ORANGE_PRICE.multiply(new BigDecimal(2));
+            } else {
+
+                totalOrangePrice = ORANGE_PRICE.multiply(new BigDecimal(numberOfOranges));
+            }
+
         }
 
         return CURRENCY_SYMBOL +totalOrangePrice.add(totalApplePrice).toString();
