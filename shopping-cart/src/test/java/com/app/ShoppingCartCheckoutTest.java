@@ -26,10 +26,16 @@ public class ShoppingCartCheckoutTest {
         List<String> listOfItems = Arrays.asList("Apple");
         String totalPriceString = shoppingCartCheckout.checkout(listOfItems);
 
-
         assertThat("Should have returned the price of an apple", totalPriceString, is("£0.60"));
-
-
     }
 
+
+    @Test
+    public void whenCheckoutSentAListContainingAnOrangeItsPriceReturnedAsTotalPrice(){
+
+        List<String> listOfItems = Arrays.asList("Orange");
+        String totalPriceString = shoppingCartCheckout.checkout(listOfItems);
+
+        assertThat("Should have returned the price of an orange", totalPriceString, is("£0.25"));
+    }
 }
