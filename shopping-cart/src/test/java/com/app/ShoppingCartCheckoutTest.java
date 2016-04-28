@@ -65,4 +65,13 @@ public class ShoppingCartCheckoutTest {
 
         assertThat("Should have returned the total price of 3 apples(Buy 1 get 1 free) and 2 oranges", totalPriceString, is("£2.30"));
     }
+
+    @Test
+    public void whenCheckoutSentAListContainingThreeOrangesPriceForTwoReturnedAsTotalPrice(){
+
+        List<String> listOfItems = Arrays.asList("Orange","Orange", "Orange");
+        String totalPriceString = shoppingCartCheckout.checkout(listOfItems);
+
+        assertThat("Should have returned the total price of 2 oranges(3 for the price of 2)", totalPriceString, is("£0.50"));
+    }
 }
