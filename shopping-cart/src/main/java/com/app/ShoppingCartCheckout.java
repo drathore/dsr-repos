@@ -2,6 +2,8 @@ package com.app;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ShoppingCartCheckout implements Checkout {
 
@@ -23,11 +25,27 @@ public class ShoppingCartCheckout implements Checkout {
     }
 
     public String checkout(List<String> listOfItems) {
-        return CURRENCY_SYMBOL + listOfItems.stream().map(i -> {
-            if(i.equals(Item.APPLE.name)){
-                return Item.APPLE.price;
+        Map<String, List<String>> groupedByName = listOfItems.stream().collect(Collectors.groupingBy(i -> i));
+        BigDecimal totalApplePrice = BigDecimal.ZERO;
+        BigDecimal offer = BigDecimal.ONE;
+        List<String> apples = groupedByName.get(Item.APPLE.name);
+        if(apples != null){
+            BigDecimal totalNumberOfApples = new BigDecimal(apples.size()+"");
+            BigDecimal[] bigDecimals = totalNumberOfApples.divideAndRemainder(new BigDecimal(2));
+            if(bigDecimals[1] == BigDecimal.ZERO){
+                offer = new BigDecimal("0.5");
             }
-            return Item.ORANGE.price;
-        }).reduce(BigDecimal::add).get().toString();
+            totalApplePrice = totalNumberOfApples.multiply(Item.APPLE.price).multiply(offer).setScale(2);
+        }
+
+        List<String> oranges = groupedByName.get(Item.ORANGE.name);
+        BigDecimal totalOrangePrice = BigDecimal.ZERO;
+        if(oranges != null){
+            totalOrangePrice = ORANGE_PRICE.multiply(new BigDecimal(oranges.size()));
+        }
+
+
+        return CURRENCY_SYMBOL +totalOrangePrice.add(totalApplePrice).toString();
+
     }
 }
