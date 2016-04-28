@@ -1,7 +1,6 @@
 package com.app;
 
 
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,7 +26,10 @@ public class ShoppingCartCheckoutTest {
         List<String> listOfItems = Arrays.asList("Apple");
         String totalPriceString = shoppingCartCheckout.checkout(listOfItems);
 
+
         assertThat("Should have returned the price of an apple", totalPriceString, is("£0.60"));
+
+
     }
 
 }
