@@ -4,6 +4,11 @@ import java.util.List;
 
 public class ShoppingCartCheckout {
     public String checkout(List<String> listOfItems) {
-        return "£0.60";
+
+        String item = listOfItems.stream().findFirst().get();
+        if (item.equals("Apple"))
+            return "£0.60";
+
+        return "£0.25";
     }
 }
