@@ -2,8 +2,6 @@ package com.app;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ShoppingCartCheckout implements Checkout {
 
@@ -26,18 +24,12 @@ public class ShoppingCartCheckout implements Checkout {
     }
 
     public String checkout(List<String> listOfItems) {
-        Map<String, List<String>> groupedByName = listOfItems.stream().collect(Collectors.groupingBy(i -> i));
-        BigDecimal totalApplePrice = BigDecimal.ZERO;
-        List<String> apples = groupedByName.get(Item.APPLE.name);
-        if(apples != null){
-            totalApplePrice = calculateAppleTotalPrice(apples.size());
-        }
+        long appleCount = listOfItems.stream().filter(i -> i.equals(Item.APPLE.name)).count();
+        long orangeCount = listOfItems.stream().filter(i -> i.equals(Item.ORANGE.name)).count();
 
-        List<String> oranges = groupedByName.get(Item.ORANGE.name);
-        BigDecimal totalOrangePrice = BigDecimal.ZERO;
-        if(oranges != null){
-            totalOrangePrice = calculateOrangeTotalPrice(oranges.size());
-        }
+        BigDecimal totalApplePrice = calculateAppleTotalPrice((int)appleCount);
+
+        BigDecimal totalOrangePrice = calculateOrangeTotalPrice((int)orangeCount);
 
         return CURRENCY_SYMBOL +totalOrangePrice.add(totalApplePrice).toString();
 
