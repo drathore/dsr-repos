@@ -30,35 +30,33 @@ public class ShoppingCartCheckout implements Checkout {
         BigDecimal totalApplePrice = BigDecimal.ZERO;
         List<String> apples = groupedByName.get(Item.APPLE.name);
         if(apples != null){
-            totalApplePrice = calculateApplePrice(apples.size());
+            totalApplePrice = calculateAppleTotalPrice(apples.size());
         }
 
         List<String> oranges = groupedByName.get(Item.ORANGE.name);
         BigDecimal totalOrangePrice = BigDecimal.ZERO;
         if(oranges != null){
-
-            int numberOfOranges = oranges.size();
-            if(numberOfOranges == 3 ){
-                totalOrangePrice = ORANGE_PRICE.multiply(new BigDecimal(2));
-            } else {
-
-                totalOrangePrice = ORANGE_PRICE.multiply(new BigDecimal(numberOfOranges));
-            }
-
+            totalOrangePrice = calculateOrangeTotalPrice(oranges.size());
         }
 
         return CURRENCY_SYMBOL +totalOrangePrice.add(totalApplePrice).toString();
 
     }
 
-    private BigDecimal calculateApplePrice(int numberOfApples) {
+    private BigDecimal calculateOrangeTotalPrice(int numberOfOranges) {
+
+        int numberOfOrangesToBePricedAfterOffer = numberOfOranges - (numberOfOranges / 3);
+        return ORANGE_PRICE.multiply(new BigDecimal(numberOfOrangesToBePricedAfterOffer));
+    }
+
+    private BigDecimal calculateAppleTotalPrice(int numberOfApples) {
         BigDecimal totalNumberOfApples = new BigDecimal(numberOfApples);
-        BigDecimal[] bigDecimals = totalNumberOfApples.divideAndRemainder(new BigDecimal(2));
+        BigDecimal remainder =  new BigDecimal(numberOfApples % 2);
         BigDecimal offerPrice = BigDecimal.ZERO;
         if(totalNumberOfApples.compareTo(BigDecimal.ONE) > 0){
-            offerPrice = totalNumberOfApples.subtract(bigDecimals[1]).multiply(Item.APPLE.price).multiply(APPLE_OFFER);
+            offerPrice = totalNumberOfApples.subtract(remainder).multiply(Item.APPLE.price).multiply(APPLE_OFFER);
         }
 
-        return bigDecimals[1].multiply(Item.APPLE.price).add(offerPrice).setScale(2);
+        return remainder.multiply(Item.APPLE.price).add(offerPrice).setScale(2);
     }
 }
